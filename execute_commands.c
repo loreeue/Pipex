@@ -45,7 +45,7 @@ char	*ft_find_executable(char *command, char **envp)
 		return (NULL);
 	paths = ft_split(path_env, ':');
 	i = -1;
-	while (paths[i++])
+	while (paths[++i])
 	{
 		temp = ft_strjoin(paths[i], "/");
 		if (!temp)
