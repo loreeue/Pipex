@@ -6,7 +6,7 @@
 /*   By: loruzqui <loruzqui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 20:44:12 by loruzqui          #+#    #+#             */
-/*   Updated: 2025/05/07 19:17:02 by loruzqui         ###   ########.fr       */
+/*   Updated: 2025/05/11 18:22:59 by loruzqui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,12 @@ void	ft_find_path(t_data *data)
 {
 	char	*path;
 
-	if (!data->commands->args)
-		return ;
+	if (!data->commands->args || !data->commands->args[0]
+		|| data->commands->args[0][0] == '\0')
+	{
+		write(2, "Error: comando vacío\n", 22);
+		return (ft_free_data(data), exit(EXIT_FAILURE));
+	}
 	if (ft_strchr(data->commands->args[0], '/'))
 	{
 		if (access(data->commands->args[0], X_OK) == 0)
@@ -74,15 +78,13 @@ void	ft_find_path(t_data *data)
 		else
 		{
 			perror("command not found");
-			ft_free_data(data);
-			exit(EXIT_FAILURE);
+			return (ft_free_data(data), exit(EXIT_FAILURE));
 		}
 	}
 	path = ft_find_executable(data->commands->args[0], data->envp);
 	if (!path || execve(path, data->commands->args, data->envp) == -1)
 	{
 		perror("command not found");
-		ft_free_data(data);
-		exit(EXIT_FAILURE);
+		return (ft_free_data(data), exit(EXIT_FAILURE));
 	}
 }
